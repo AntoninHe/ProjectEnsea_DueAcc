@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2017-06-13"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Documentation projet plateforme accélérométrique et gyroscopique </title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Documentation projet plateforme accélérométrique et gyroscopique <br/>
+<b>Logiciel</b>
+</h1>
+<h2 class="author">
+Antonin HÉRÉSON &amp; Marly BALDE
+</h2>
+<h2 class="Date">
+Juin 2017
+</h2>
+<div class="Unindented">
+Nous allons voir les différentes fonctionnalités du logiciel et son utilisation.
+</div>
+<div class="Indented">
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+<div class="fulltoc">
+<div class="tocheader">
+Table of Contents
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part--I">Part: Fonctionnalité</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part--II">Part: Interface / Utilisation</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section--1">Section: Visualisation des données reçus</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection--1">Subsection: Afficheur</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection--2">Subsection: Courbe</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section--2">Section: Commande</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection--3">Subsection: Due Command</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection--4">Subsection: Commande port série</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section--3">Section: Le filtrage</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section--4">Section: Exportation d’un fichier CSV</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section--5">Section: About</a>
+</div>
+</div>
+
+</div>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--I"></a>Fonctionnalité
+</h1>
+<div class="Unindented">
+Ce logiciel dispose de 3 grandes fonctionnalités :
+</div>
+<ul>
+<li>
+D’afficher en temps réel les données émises par Arduino Due qui dispose d’une plateforme accélérométrique et gyroscopique. On peut visualiser ces données sous la forme : <ul>
+<li>
+D’une courbe représentant les 3 axes en temps réel.
+</li>
+<li>
+Des données bruts avec des afficheurs 7 segments.
+</li>
+
+</ul>
+
+</li>
+<li>
+De stocker ces données sous la forme d’un fichier CSV pour pouvoir traiter ces données sur Matlab/Ocatve/Scilab.
+</li>
+<li>
+De filtrer les donnés reçues à l’aide d’un filtre FIR (filtre à réponse impulsionnel finie).
+</li>
+<li>
+De commander l’envoi des données de l’Arduino Due.
+</li>
+
+</ul>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--II"></a>Interface / Utilisation
+</h1>
+<div class="Unindented">
+L’IHM (interface homme machine) développée, a pour but d’effectuer toutes ces taches le plus simplement possible.
+</div>
+<div class="Indented">
+<div class="float">
+<a class="Label" name="Figure-1"> </a><div class="figure" style="max-width: 100%;">
+<img class="figure" src="1.png" alt="figure 1.png" style="max-width: 947px; max-height: 492px;"/>
+<div class="caption">
+Figure 1 
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section-">
+<a class="toc" name="toc-Section--1"></a>Visualisation des données reçus
+</h1>
+<h2 class="Subsection-">
+<a class="toc" name="toc-Subsection--1"></a>Afficheur
+</h2>
+<div class="Unindented">
+On affiche les donnés les données en temps réels sur ces 3 afficheurs.<br/>
+<div class="float">
+<a class="Label" name="Figure-2"> </a><div class="figure">
+<img class="embedded" src="digit.png" alt="figure digit.png" style="max-width: 368px; max-height: 103px;"/>
+<div class="caption">
+Figure 2 Digit
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h2 class="Subsection-">
+<a class="toc" name="toc-Subsection--2"></a>Courbe
+</h2>
+<div class="Unindented">
+On visualise en <b>bleu</b> l’axe <b>X</b>, en <b>rouge</b> l’axe <b>Y</b> et en ver l’axe <b>Z</b>.<br/>
+<b>La barre </b>sur la droite permet de régler<b> l’échelle d’affichage</b> des abscisses, cela est utile lors de l’utilisation d’un filtre.<div class="float">
+<a class="Label" name="Figure-3"> </a><div class="figure">
+<img class="embedded" src="courbe.png" alt="figure courbe.png" style="max-width: 653px; max-height: 268px;"/>
+<div class="caption">
+Figure 3 Courbe
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section-">
+<a class="toc" name="toc-Section--2"></a>Commande
+</h1>
+<h2 class="Subsection-">
+<a class="toc" name="toc-Subsection--3"></a>Due Command
+</h2>
+<ul>
+<li>
+Open ouvre le port série pour communiquer avec l’Arduino. (Si l’ouverture échoue il ne se passe rien).
+</li>
+<li>
+Close ferme le port série pour communiquer avec l’Arduino.
+</li>
+<li>
+Start on démarre l’émission périodique des données de l’Arduino.
+</li>
+<li>
+Avec Stop et Clear on met en pause.
+</li>
+<li>
+Clear fait repartir la courbe de 0.
+</li>
+
+</ul>
+<h2 class="Subsection-">
+<a class="toc" name="toc-Subsection--4"></a><div class="float">
+<a class="Label" name="Figure-4"> </a><div class="figure">
+<img class="embedded" src="duec.png" alt="figure duec.png" style="max-width: 279px; max-height: 101px;"/>
+<img class="embedded" src="duecc.png" alt="figure duecc.png" style="max-width: 277px; max-height: 100px;"/>
+<div class="caption">
+Figure 4 Commande port série
+</div>
+
+</div>
+
+</div>
+<br/>
+Le port série
+</h2>
+<div class="Unindented">
+Il faut choisir le port correpondant au port au est connecter l’Arduino DUE<br/>
+Le bouton à coté sert à rafraîchir la liste des port de votre PC<br/>
+<div class="float">
+<a class="Label" name="Figure-5"> </a><div class="figure">
+<img class="embedded" src="portchoose.png" alt="figure portchoose.png" style="max-width: 150px; max-height: 88px;"/>
+<div class="caption">
+Figure 5 choix du port serie
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section-">
+<a class="toc" name="toc-Section--3"></a>Le filtrage
+</h1>
+<div class="Unindented">
+Vous pouvez charger un filtre de type FIR qui filtrera en temps réel les donnés reçues.<br/>
+Pour charge un nouveau filtre cliquer sur New Filter<br/>
+<div class="float">
+<a class="Label" name="Figure-6"> </a><div class="figure">
+<img class="embedded" src="filtre.png" alt="figure filtre.png" style="max-width: 220px; max-height: 186px;"/>
+<div class="caption">
+Figure 6 filter
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section-">
+<a class="toc" name="toc-Section--4"></a>Exportation d’un fichier CSV
+</h1>
+<ul>
+<li>
+Pour enregistrer les données cochez la case ON/OFF.
+</li>
+<li>
+Pour effacer le fichier actuel cliquer sur new acquisition.
+</li>
+<li>
+Export va vous demander ou sauvegarder votre fichier CSV.
+</li>
+
+</ul>
+<div class="Unindented">
+<div class="float">
+<a class="Label" name="Figure-7"> </a><div class="figure">
+<img class="embedded" src="export.png" alt="figure export.png" style="max-width: 223px; max-height: 95px;"/>
+<div class="caption">
+Figure 7 export CSV
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section-">
+<a class="toc" name="toc-Section--5"></a>About
+</h1>
+<div class="Unindented">
+Vous trouvez dans cette section de diverses informations comme la version de Qt utilisé la version de l’application, les développeur du projet ainsi qu’un lien vers la documentation.<br/>
+<br/>
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+
+</div>
+</body>
+</html>

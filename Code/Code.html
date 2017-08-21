@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2017-06-13"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Documentation projet plateforme accélérométrique et gyroscopique </title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Documentation projet plateforme accélérométrique et gyroscopique <br/>
+<b>Le code Qt</b>
+</h1>
+<h2 class="author">
+Antonin HÉRÉSON &amp; Marly BALDE
+</h2>
+<h2 class="Date">
+Juin 2017
+</h2>
+<div class="abstract">
+<p class="abstract-message">
+Abstract
+</p>
+Dans ce document nous détaillerons l’implémentation de notre projet. <br/>
+Pour cela nous, nous expliquerons les parties majeures du projet et les différentes parties du code et leurs fonctions respectives. <br/>
+Il nous arrivera de faire référence aux cours que nous avons eus en première et deuxième année, si cela vous paraît lointain ou abstrait, ne vous inquiétez pas, ça reste assez intuitif. <br/>
+Par ailleurs, les cours en question, sont accessibles soit sur Moodle, soit par un prof référent de la matière. 
+</div>
+<div class="Unindented">
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+<div class="Indented">
+<p><br/>
+</p>
+
+</div>
+<div class="fulltoc">
+<div class="tocheader">
+Table of Contents
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-I">Part I: Les spécificités Qt</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-1">Section 1: Slot et Signal / La fonction connect()</a>
+</div>
+<div class="tocindent">
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsubsection--1">Subsubsection: Définition</a>
+</div>
+</div>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-II">Part II: La liaison Série</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-2">Section 2: Initialisation de la liaison série</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-2.1">Subsection 2.1: Utilisation du port série</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-3">Section 3: Le Codage/Décodage de la trame</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.1">Subsection 3.1: Le protocole en bref</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-3.2">Subsection 3.2: Le décodage sous Qt</a>
+</div>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-III">Part III: Tracé des graphsiques</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-4">Section 4: Importation</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-5">Section 5: Utilisation</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-IV">Part IV: Les interactions avec l’IHM (Interface Homme-Machine) </a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-V">Part V: Le filtrage</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-VI">Part VI: La manipulation des Vectors</a>
+</div>
+<div class="tocindent">
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-5.1">Subsection 5.1: at(index)</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-5.2">Subsection 5.2: pushback()</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-5.3">Subsection 5.3: size()</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-5.4">Subsection 5.4: clear()</a>
+</div>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part-VII">Part VII: Le stockage des données.</a>
+</div>
+
+</div>
+<h1 class="Part">
+<a class="toc" name="toc-Part-I">Part I.</a> Les spécificités Qt
+</h1>
+<h1 class="Section">
+<a class="toc" name="toc-Section-1">1</a> Slot et Signal / La fonction connect()<a class="Label" name="sec:Slot-et-Signal"> </a>
+</h1>
+<h3 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--1"></a>Définition
+</h3>
+<div class="Unindented">
+Nous ferons référence aux slots et aux signaux dans ce document. La définition du site du zéro devrait vous suffire à comprendre ce document, mais si vous souhaitez développer sur Qt, nous vous invitons à consulter le <a class="URL" href="https://openclassrooms.com/courses/programmez-avec-le-langage-c/les-signaux-et-les-slots-2">cours</a> relatif.
+</div>
+<ul>
+<li>
+&ldquo;Un signal : c’est un message envoyé par un widget lorsqu’un évènement se produit.&rdquo;
+</li>
+<li>
+&ldquo;Un slot : c’est la fonction qui est appelée lorsqu’un évènement s’est produit. On dit que le signal appelle le slot. Concrètement, un slot est une méthode d’une classe.&rdquo; (cf cours de Java)
+</li>
+
+</ul>
+<div class="Unindented">
+La fonction connect() permet de relier un signal à un slot.
+</div>
+<h1 class="Part">
+<a class="toc" name="toc-Part-II">Part II.</a> La liaison Série
+</h1>
+<h1 class="Section">
+<a class="toc" name="toc-Section-2">2</a> Initialisation de la liaison série
+</h1>
+<div class="Unindented">
+Cette fonction Initialise la fonction série.<br/>
+On procède d’abord à la création de l’objet QserialPort.<br/>
+Qt nous permet grâce à cet objet, d’interfacer et de manipuler aisément la liaison série.<br/>
+Il dispose de plusieurs paramètres avec des valeurs possibles qui lui sont intrinsèques. <br/>
+
+</div>
+<div class="Indented">
+Les différentes fonctions utilisées pour la configuration du port série sont:
+</div>
+<ul>
+<li>
+setBaudRate : Pour régler la vitesse de communication du port série. Attention à bien garder la même vitesse du coté Arduino.
+</li>
+<li>
+setDataBits : Pour changer la taille des mots reçus. Nous avons 8 bits de données par mot. Ce paramètre est imposé par l’Arduino, il ne faut donc pas le changer.
+</li>
+<li>
+setParity: Pour effectuer un contrôle des données avec un bit de parité. Nous n’en avons pas. Ce paramètre est imposé par l’Arduino, il ne faut donc pas le changer.
+</li>
+<li>
+setStopBits : Un seul bit de stop est contenu dans le mot. Ce paramètre est imposé par l’Arduino, il ne faut donc pas le changer.
+</li>
+<li>
+setFlowControl : On n’utilise pas de contrôle du flow ni via le software, ni via le hardware. Il est possible de rajouter un contrôle XON/XOFF mais cela n’as pas d’intérêt pour l’instant.<div class="float">
+<a class="Label" name="fig:initialization_serial()"> </a><div class="figure" style="max-width: 100%;">
+<img class="figure" src="initserial.png" alt="figure initserial.png" style="max-width: 595px; max-height: 186px;"/>
+<div class="caption">
+Figure 1 initialization_serial()
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+On va relier<a class="Reference" href="#sec:Slot-et-Signal">(1↑)</a> la réception d’une donnée à l’appel d’une fonction. Ce fonctionnement est similaire à une interruption micro contrôleur. ( Cf cours sur les interruptions, MicroP) <br/>
+<img class="embedded" src="connectSerial.png" alt="figure connectSerial.png" style="width: 100%; max-width: 564px; height: auto; max-height: 21px;"/>
+
+</li>
+<li>
+setPortName ; Permet de choisir le port que l’ on va utiliser. Ce paramètre est dynamique, l’utilisateur le choisit avec l’interface graphique.
+</li>
+<li>
+flush : Sert à enlever toutes les données potentiellement stockées dans le buffeur du port. On évite ainsi de lire des données non désirées.<br/>
+<div class="float">
+<a class="Label" name="fig:QserialPort-Open"> </a><div class="figure" style="max-width: 100%;">
+<img class="figure" src="openbt.png" alt="figure openbt.png" style="max-width: 551px; max-height: 164px;"/>
+<div class="caption">
+Figure 2 QserialPort Open
+</div>
+
+</div>
+
+</div>
+
+</li>
+
+</ul>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-2.1">2.1</a> Utilisation du port série
+</h2>
+<div class="Unindented">
+Lors de la réception la fonction on_serialReceived() est appelée;<br/>
+
+</div>
+<div class="Indented">
+<div class="float">
+<a class="Label" name="fig:serialReceived()"> </a><div class="figure">
+<img class="embedded" src="on_serialReceived.png" alt="figure on_serialReceived.png" style="max-width: 338px; max-height: 76px;"/>
+<br/>
+<br/>
+<img class="embedded" src="serialReceived.png" alt="figure serialReceived.png" style="max-width: 291px; max-height: 20px;"/>
+<div class="caption">
+Figure 3 serialReceived()
+</div>
+
+</div>
+
+</div>
+Cette fonction déclenche un timer, ce dernier va faire une temporisation de 5ms, afin de garantir l’arrivée de l’intégralité des données dans le buffer. <br/>
+Ensuite le traitement est effectué dans la fonction on_readingprocess().<br/>
+La trame issue du buffer est lue par la fonction readAll().<br/>
+<div class="float">
+<a class="Label" name="fig:ReadAll"> </a><div class="figure">
+<img class="embedded" src="readAll.png" alt="figure readAll.png" style="max-width: 160px; max-height: 24px;"/>
+<div class="caption">
+Figure 4 ReadAll()
+</div>
+
+</div>
+
+</div>
+ <br/>
+Nous utiliserons aussi le port pour envoyer des signaux de contrôle à l’Arduino. <br/>
+Cela peut être développé pour une utilisation plus complexe.<br/>
+Ce contrôle nous a été particulièrement utile pendant les phases de test.<div class="float">
+<a class="Label" name="fig:serial-write()"> </a><div class="figure">
+<img class="embedded" src="w1.png" alt="figure w1.png" style="max-width: 186px; max-height: 24px;"/>
+<img class="embedded" src="write.png" alt="figure write.png" style="max-width: 178px; max-height: 14px;"/>
+<div class="caption">
+Figure 5 serial write()
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section">
+<a class="toc" name="toc-Section-3">3</a> Le Codage/Décodage de la trame
+</h1>
+<div class="Unindented">
+Le but de la transmission a été de récupérer les données de l’accéléromètre sur les 3 axes de façon périodique.<br/>
+Nous avons dû mettre en place un protocole de communication entre l’Arduino et l’ordinateur permettant de s’assurer que l’on reçoit l’intégralité des données.<br/>
+En effet, si on les envoie les unes après les autres on ne pourrait pas savoir si une trame a été perdue.<br/>
+Il faut savoir qu’à nos débuts nos avons utilisé Scilab du coté Pc et la gestion du port série n’était pas optimal.<br/>
+C’est d’ailleurs une des raisons pour lesquelles nous avons fait tabula rasa du projet et avons recommencé sur Qt.<br/>
+
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-3.1">3.1</a> Le protocole en bref
+</h2>
+<div class="Unindented">
+Ce protocole consiste à transformer notre Int en deux caractères, représentant son codage Hexadécimal. On schématise cela sur la figure suivante avec <span class="formula"><i>x</i></span> pour un chiffre binaire et <span class="formula"><i>X</i></span> pour un chiffre en Hexa : <div class="formula">
+<a class="eqnumber" name="eq-1">(1) </a><span class="environment"><span class="arrayrow">
+<span class="arraycell align-l">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>x</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>4</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>1</sub><i>x</i><sub>0</sub>]
+</span>
+
+</span>
+</span>⟶<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>x</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>4</sub>]
+</span>
+
+</span>
+</span>
+</span>
+<span class="arraycell align-c">
+|
+</span>
+<span class="arraycell align-c">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>x</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>x</i><sub>0</sub>]
+</span>
+
+</span>
+</span>
+</span>
+
+</span>
+</span> → <span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>X</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>X</i><sub>0</sub>
+</span>
+
+</span>
+</span>]
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-l">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>y</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>4</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>1</sub><i>y</i><sub>0</sub>]
+</span>
+
+</span>
+</span>⟶<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>y</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>4</sub>
+</span>
+
+</span>
+</span>]
+</span>
+<span class="arraycell align-c">
+|
+</span>
+<span class="arraycell align-c">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>y</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>y</i><sub>0</sub>]
+</span>
+
+</span>
+</span>
+</span>
+
+</span>
+</span> → <span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>Y</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>Y</i><sub>0</sub>
+</span>
+
+</span>
+</span>]
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-l">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>z</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>4</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>1</sub><i>z</i><sub>0</sub>]
+</span>
+
+</span>
+</span>⟶<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>z</i><sub>7</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>6</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>5</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>4</sub>]
+</span>
+
+</span>
+</span>
+</span>
+<span class="arraycell align-c">
+|
+</span>
+<span class="arraycell align-c">
+[<span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+<i>z</i><sub>3</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>2</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>z</i><sub>0</sub>]
+</span>
+
+</span>
+</span>
+</span>
+
+</span>
+</span> → <span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>Z</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>Z</i><sub>0</sub>
+</span>
+
+</span>
+</span>]
+</span>
+
+</span>
+</span>
+</div>
+<br/>
+Et ensuite nous concaténons nos caractères et nous les envoyons sur la liaison série. La trame est sous cette forme :
+</div>
+<div class="Indented">
+<div class="formula">
+<a class="eqnumber" name="eq-2">(2) </a><span class="array"><span class="arrayrow">
+<span class="arraycell align-c">
+[<i>X</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>X</i><sub>0</sub>
+</span>
+<span class="arraycell align-c">
+<i>Y</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>Y</i><sub>0</sub>
+</span>
+<span class="arraycell align-c">
+<i>Z</i><sub>1</sub>
+</span>
+<span class="arraycell align-c">
+<i>Z</i><sub>0</sub>]
+</span>
+
+</span>
+</span>
+</div>
+
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-3.2">3.2</a> Le décodage sous Qt
+</h2>
+<div class="Unindented">
+Nous recevons donc une trame du coté PC. Cette implémentation est satisfaisante car elle s’est montrée fiable et robuste lorsque nous avions eu des problèmes de réception et elle a passé nos tests de communication PC-Arduino.<br/>
+
+</div>
+<ul>
+<li>
+Les fonctions .left() .mid et .right() permettent de tronquer la trame. 
+</li>
+<li>
+Ensuite on convertit notre nombre en Hexa en un Int signé.<br/>
+<div class="float">
+<a class="Label" name="fig:Récupération-Trame"> </a><div class="figure">
+<img class="embedded" src="recupTrame.png" alt="figure recupTrame.png" style="max-width: 476px; max-height: 53px;"/>
+<div class="caption">
+Figure 6 Récupération Trame
+</div>
+
+</div>
+
+</div>
+<br/>
+
+</li>
+<li>
+Ainsi, on convertit juste un mot de 8 bit signé, on effectue un test pour savoir si le nombre est positif ou négatif.
+</li>
+<li>
+Si il est négatif on lui soustrait 255 pour récupérer la valeur.<br/>
+ <div class="float">
+<a class="Label" name="fig:intsigned_to_int()"> </a><div class="figure">
+<img class="embedded" src="toInt.png" alt="figure toInt.png" style="max-width: 344px; max-height: 102px;"/>
+<div class="caption">
+Figure 7 intsigned_to_int()
+</div>
+
+</div>
+
+</div>
+
+</li>
+
+</ul>
+<h1 class="Part">
+<a class="toc" name="toc-Part-III">Part III.</a> Tracé des graphsiques
+</h1>
+<div class="Unindented">
+Le tracé des courbes se fait grâce à une bibliothèque externe à Qt. Nous avons choisi Qcustomplot dont les fichiers source ainsi que des tutoriels sont disponibles sur leur site : <a class="FlexURL" href="http://qcustomplot.com">http://qcustomplot.com</a>. La licence est une licence GPL.<br/>
+Nous allons voir maintenant nous l’avons utilisé.<br/>
+<div class="float">
+<a class="Label" name="Figure-8"> </a><div class="figure">
+<img class="embedded" src="qcustomplot.png" alt="figure qcustomplot.png" style="max-width: 522px; max-height: 99px;"/>
+<div class="caption">
+Figure 8 <b>Qcustomplot</b>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h1 class="Section">
+<a class="toc" name="toc-Section-4">4</a> Importation
+</h1>
+<div class="Unindented">
+Pour importer notre projet il faut ajouter les fichiers source de la bibliothèque à notre environnement de travail.<br/>
+Pour cela il suffit de copier ou de &ldquo;linker&rdquo; les fichiers dans le répertoire courant. (Pour plus de détails sur l’import de notre (désormais votre ) projet, consultez sur la documentation (annexe) relative à celle-ci). <br/>
+Pour des informations plus générales, Qcustomplot met à disposition une documentation très clair. <a class="FlexURL" href="http://qcustomplot.com/index.php/tutorials/settingup">http://qcustomplot.com/index.php/tutorials/settingup</a>
+</div>
+<h1 class="Section">
+<a class="toc" name="toc-Section-5">5</a> Utilisation
+</h1>
+<div class="Unindented">
+Nous verrons ici comment nous avons utilisé cette librairie, ainsi que les actions basiques pour ajouter et changer les courbes tracées.<br/>
+
+</div>
+<ul>
+<li>
+Pour ajouter un graphique à notre widget, appeler la fonction addGraph().
+</li>
+<li>
+Les graphiques se manipulent suivant leur ordre d’apparition ex : graph(0) pour le 1er
+</li>
+<li>
+Ensuite avec la fonction setPen() vous pouvez choisir une couleur spécifique.<ul>
+<li>
+Avec QPen(Qt::&lt;votre couleur&gt;) vous pouvez choisir une couleur prédéfinie et acceptée par Qcustomplot.
+</li>
+
+</ul>
+
+</li>
+<li>
+Pour modifier le nom de l’axe des abscisses et des ordonnées, il faut choisir l’axis x ou y et utiliser la fonction set Label(&ldquo;&lt;le nom de l’axe&gt;&rdquo;)
+</li>
+<li>
+Enfin avec setRange<a class="Label" name="Enfin-avec-setRange"> </a> vous choisissez la plage d’affichage des abscisses. Vous serrez amener à le modifier en fonction des données que vous afficherez.<br/>
+<div class="float">
+<a class="Label" name="fig:initialization_custumplot()"> </a><div class="figure">
+<img class="embedded" src="initialization_custumplot.png" alt="figure initialization_custumplot.png" style="max-width: 443px; max-height: 223px;"/>
+<div class="caption">
+Figure 9 initialization_custumplot()
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+Grâce à la fonction addData(), on peut rajouter nos points à la courbe.
+</li>
+<li>
+le icmpt est un index qui permet de savoir combien d’échantillons on été acquis depuis le début du tracé.<br/>
+<div class="float">
+<a class="Label" name="fig:addData()"> </a><div class="figure">
+<img class="embedded" src="addData.png" alt="figure addData.png" style="max-width: 541px; max-height: 51px;"/>
+<div class="caption">
+Figure 10 addData()
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+De même que pour l’axe y, <a class="Reference" href="#fig:setrange">11↓</a> on utilise setRange pour modifier la plage des ordonnées que l’on peut déplacer dynamiquement grâce à icmpt avec une taille de 200 échantillons. <br/>
+<div class="float">
+<a class="Label" name="fig:setrange"> </a><div class="figure">
+<img class="embedded" src="rangex.png" alt="figure rangex.png" style="max-width: 485px; max-height: 18px;"/>
+<div class="caption">
+Figure 11 setrange
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+Enfin on rafraîchit le widget avec la commande replot pour obtenir l’affichage de nos nouveaux points.<br/>
+<div class="float">
+<a class="Label" name="Figure-12"> </a><div class="figure">
+<img class="embedded" src="replot.png" alt="figure replot.png" style="max-width: 210px; max-height: 17px;"/>
+<div class="caption">
+Figure 12 replot()
+</div>
+
+</div>
+
+</div>
+ 
+</li>
+
+</ul>
+<h1 class="Part">
+<a class="toc" name="toc-Part-IV">Part IV.</a> Les interactions avec l’IHM (Interface Homme-Machine) 
+</h1>
+<ul>
+<li>
+Pour ce qui de l’utilisation du logiciel et de ses fonctions, je vous invite a consulter ce document.<br/>
+Nous allons voir rapidement comment ajouter un bouton.
+</li>
+<li>
+Dans un premier temps ouvrez l’éditeur de l’interface graphique.<br/>
+<div class="float">
+<a class="Label" name="Figure-13"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="openqtdesign.png" alt="figure openqtdesign.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 13 open Qtcreator
+</div>
+
+</div>
+
+</div>
+<br/>
+Vous avez maintenant une interface qui permet de composer aisément l’IHM.
+</li>
+<li>
+Maintenant faite glisser le pushbouton en maintenant le bouton de votre souris sur la surface de l’IHM (Cf même principe que ce que nous avons appris en JAVA)<br/>
+<div class="float">
+<a class="Label" name="Figure-14"> </a><div class="figure">
+<img class="embedded" src="pushb.png" alt="figure pushb.png" style="max-width: 240px; max-height: 23px;"/>
+<div class="caption">
+Figure 14 Le Bouton poussoir
+</div>
+
+</div>
+
+</div>
+<br/>
+Vous obtiendrez cette vue.<br/>
+<div class="float">
+<a class="Label" name="Figure-15"> </a><div class="figure" style="max-width: 50%;">
+<div class="caption">
+Figure 15 IHM avec le bouton poussoir
+</div>
+<img class="figure" src="pushbui.png" alt="figure pushbui.png" style="max-width: 423px; max-height: 324px;"/>
+
+</div>
+
+</div>
+<br/>
+Vous pouvez grâce à cette vue mettre en place les différents widgets.
+</li>
+<li>
+Sur votre droite vous trouverez une arborescence de tous les widgets votre fenêtre.<br/>
+<div class="float">
+<a class="Label" name="Figure-16"> </a><div class="figure">
+<img class="embedded" src="listwidg.png" alt="figure listwidg.png" style="max-width: 383px; max-height: 295px;"/>
+<div class="caption">
+Figure 16 Arborescence
+</div>
+
+</div>
+
+</div>
+<br/>
+Nous allons maintenant modifier le nom qui nous sert à manipuler le widget dans le code.<br/>
+<div class="float">
+<a class="Label" name="Figure-17"> </a><div class="figure">
+<img class="embedded" src="yourButton.png" alt="figure yourButton.png" style="max-width: 378px; max-height: 314px;"/>
+<div class="caption">
+Figure 17 Propriétés du bouton 
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+Cette partie regroupe toute les propriétés du widget.
+</li>
+<li>
+Maintenant que cela est fait, vous pouvez double-cliquer sur le texte de votre bouton pour l’éditer.<br/>
+Nous allons maintenant éditer le slot qui permet de réagir à des actions comme dans notre exemple de clic sur le bouton. (Toujours le même principe que vous avez vu &ldquo;normalement&rdquo; en JAVA, sait-on jamais avec les changement de programmes )
+</li>
+<li>
+Pour cela il faut effectuer un clic droit sur le bouton et cliquer sur &ldquo;Aller au slot&rdquo;.<br/>
+<div class="float">
+<a class="Label" name="Figure-18"> </a><div class="figure" style="max-width: 50%;">
+<div class="caption">
+Figure 18 Aller au slot
+</div>
+<img class="figure" src="slot.png" alt="figure slot.png" style="max-width: 1366px; max-height: 740px;"/>
+
+</div>
+
+</div>
+<br/>
+
+</li>
+<li>
+Maintenant vous avez accès au slot prédéfini. Nous allons sectionner clicked.<br/>
+<div class="float">
+<a class="Label" name="Figure-19"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="slotclicked.png" alt="figure slotclicked.png" style="max-width: 520px; max-height: 215px;"/>
+<div class="caption">
+Figure 19 cliked()
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+Cela va vous amener à la fonction qui serra appelée lorsque vous appuierez sur ce bouton. <br/>
+<div class="float">
+<a class="Label" name="Figure-20"> </a><div class="figure" style="max-width: 100%;">
+<img class="figure" src="slotclikedcode.png" alt="figure slotclikedcode.png" style="max-width: 322px; max-height: 74px;"/>
+<div class="caption">
+Figure 20 Slot Bouton
+</div>
+
+</div>
+
+</div>
+
+</li>
+<li>
+Vous pouvez maintenant implémenter le code qui sera lancé lors de l’appui sur ce bouton.
+</li>
+
+</ul>
+<h1 class="Part">
+<a class="toc" name="toc-Part-V">Part V.</a> Le filtrage
+</h1>
+<div class="Unindented">
+Un des objectifs du projet était de filtrer les données reçues pour se délester des variations rapides, le bruit .<br/>
+Nous avons développé un filtrage sous Scilab puis nous avons retranscrit l’algorithme en C++ sous Qt. Nous avons utilisons la même façon de manipuler les données que sous Matlab/Scilab/Octave/Mathematica c’est à dire avec des listes et des matrices. Pour cela nous avons utilisé l’objet C++ Vector.<br/>
+Pour des raisons d’optimisations nous avons mis en place un buffeur tournant pour éviter des recopies de données inutiles.<br/>
+Nous vous invitons à consulter le document sur le <a class="URL" href="Filtrage">../filtrage/filtrage.html</a> pour plus de détail.<br/>
+
+</div>
+<h1 class="Part">
+<a class="toc" name="toc-Part-VI">Part VI.</a> La manipulation des Vectors
+</h1>
+<div class="Unindented">
+Nous allons voir les manipulations qui vous permettront de continuer le développement du projet.<br/>
+Le conteneur vector se manipule de manière similaire à un tableau en C et des listes/matrices.<br/>
+Pour ceux qui auraient oublié ou qui tout simplement connaissent pas les accesseurs et les mutateurs en C++ je vous invite à lire cet article :
+</div>
+<div class="Indented">
+<a class="URL" href="http://www.commentcamarche.net/contents/183-c-accesseurs-getters-et-mutateurs-setters">commentcamarche C++ - Accesseurs (getters) et mutateurs (setters)</a><br/>
+Vous pourrez trouver la documentation de l’objet vector au adresses suivantes.:
+</div>
+<ul>
+<li>
+(en) <a class="FlexURL" href="http://www.cplusplus.com/reference/vector/vector/">http://www.cplusplus.com/reference/vector/vector/</a> (La doc que nous avons utilisé).
+</li>
+<li>
+(fr) <a class="FlexURL" href="http://fr.cppreference.com/w/cpp/container/vector">http://fr.cppreference.com/w/cpp/container/vector</a>
+</li>
+
+</ul>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-5.1">5.1</a> at(index)
+</h2>
+<div class="Unindented">
+Il va nous permettre d’accéder à l’élément situé à l’index donné. On pourra ainsi utiliser le vecteur comme un tableau en C classique que ce soit pour le lire ou le modifier. À la place de tableau[index] on aura tableau.at (index) .
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-5.2">5.2</a> pushback()
+</h2>
+<div class="Unindented">
+La fonction pushback nous permet d’ajouter un élément à la fin du conteneur.<br/>
+On l’utilise pour le stockage des données à exporter.
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-5.3">5.3</a> size()
+</h2>
+<div class="Unindented">
+size permet d’obtenir la taille du vecteur. Il nous permet d’avoir une adaptation dynamique à la taille de filtre donné (boucle).<br/>
+
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-5.4">5.4</a> clear()
+</h2>
+<div class="Unindented">
+Cette fonction permet de vider le contenu du vector.
+</div>
+<h1 class="Part">
+<a class="toc" name="toc-Part-VII">Part VII.</a> Le stockage des données.
+</h1>
+<div class="Unindented">
+Nous avons prévu de pouvoir stocker et exporter ces données dans un fichier.<br/>
+Pour cela nous avons implémenté une fonction permettant d’enregistrer dans un fichier les données stockées dans un vector nommé stockage.<br/>
+L’export ce fait grâce à la la fonction exportCSV()<br/>
+<div class="float">
+<a class="Label" name="Figure-21"> </a><div class="figure" style="max-width: 100%;">
+<img class="figure" src="exportcsv.png" alt="figure exportcsv.png" style="max-width: 881px; max-height: 563px;"/>
+<div class="caption">
+Figure 21 exportCSV()
+</div>
+
+</div>
+
+</div>
+<br/>
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+
+</div>
+</body>
+</html>

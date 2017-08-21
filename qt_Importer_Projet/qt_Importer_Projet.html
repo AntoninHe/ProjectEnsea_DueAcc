@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2017-06-13"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Documentation projet plateforme accélérométrique et gyroscopique</title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Documentation projet plateforme accélérométrique et gyroscopique<br/>
+<b>Comment importer le projet sous Qt</b>
+</h1>
+<h2 class="author">
+Antonin HÉRÉSON &amp; Marly BALDE
+</h2>
+<h2 class="Date">
+juin 2017
+</h2>
+<div class="abstract">
+<p class="abstract-message">
+Abstract
+</p>
+(Note ce document sera mis à jour par la suite pour une importation plus simple et plus rapide) Nous allons dans ce document voir comment importer le projet et sous Qt et le démarrer.
+</div>
+<div class="Unindented">
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--I"></a>Démarche à suivre
+</h1>
+<div class="Unindented">
+1) Décompresser l’archive.<br/>
+2) Démarrer le logiciel QtCreator et créer un nouveau projet<br/>
+<div class="float">
+<a class="Label" name="Figure-1"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt1.png" alt="figure qt1.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 1 Cliquer sur nouveau projet.
+</div>
+
+</div>
+
+</div>
+<br/>
+<div class="float">
+<a class="Label" name="Figure-2"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt2.png" alt="figure qt2.png" style="max-width: 886px; max-height: 552px;"/>
+<div class="caption">
+Figure 2 Choisir : application avec widget.
+</div>
+
+</div>
+
+</div>
+<br/>
+<div class="float">
+<a class="Label" name="fig:Nommer-le-projet"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt3.png" alt="figure qt3.png" style="max-width: 906px; max-height: 482px;"/>
+<div class="caption">
+Figure 3 Nommer le projet DueAcc et choisir l’emplacement où sera stocké le projet.
+</div>
+
+</div>
+
+</div>
+<br/>
+<div class="float">
+<a class="Label" name="Figure-4"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt5.png" alt="figure qt5.png" style="max-width: 906px; max-height: 482px;"/>
+<div class="caption">
+Figure 4 Ne rien changer.
+</div>
+
+</div>
+
+</div>
+<br/>
+<div class="float">
+<a class="Label" name="Figure-5"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt6.png" alt="figure qt6.png" style="max-width: 906px; max-height: 482px;"/>
+<div class="caption">
+Figure 5 Optionnel : nous vous conseillons d’utiliser le gestionnaire de version git. Sinon laisser vide.
+</div>
+
+</div>
+
+</div>
+<br/>
+<div class="float">
+<a class="Label" name="Figure-6"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="qt7.png" alt="figure qt7.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 6  Nous voila sur notre nouveau projet.
+</div>
+
+</div>
+
+</div>
+<br/>
+3) Il faut maintenant remplacer le dossier DueAcc que vous venez de créer par le dossier que vous avez téléchargé.<br/>
+Avec un copier-coller à l’emplacement choisi précédemment<a class="Reference" href="#fig:Nommer-le-projet">3↑</a><br/>
+4) Si vous aviez gardé Qtcreator ouvert vous allez avoir ce message. Choisissez Oui à tout.<br/>
+<div class="float">
+<a class="Label" name="Figure-7"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="int1.png" alt="figure int1.png" style="max-width: 709px; max-height: 104px;"/>
+<div class="caption">
+Figure 7 
+</div>
+
+</div>
+
+</div>
+<br/>
+4) Maintenant vous voilà avec les nouveaux fichiers.<br/>
+<div class="float">
+<a class="Label" name="Figure-8"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="int4.png" alt="figure int4.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 8 
+</div>
+
+</div>
+
+</div>
+<br/>
+5) Exécuter qmake qui va générer un fichier make. Ce dernier permet de lancer les compilations.<br/>
+<div class="float">
+<a class="Label" name="Figure-9"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="int5.png" alt="figure int5.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 9 
+</div>
+
+</div>
+
+</div>
+<br/>
+6) Maintenant il faut lancer l’exécution en appuyant sur la flèche verte (la compilation se fait automatiquement). <br/>
+Autrement pour juste compiler appuyer sur le marteau.<br/>
+(Cela peux prendre du temps)<br/>
+<div class="float">
+<a class="Label" name="Figure-10"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="int6.png" alt="figure int6.png" style="max-width: 1366px; max-height: 740px;"/>
+<div class="caption">
+Figure 10 
+</div>
+
+</div>
+
+</div>
+<br/>
+7) Et voilà l’application est lancée <br/>
+<div class="float">
+<a class="Label" name="Figure-11"> </a><div class="figure" style="max-width: 50%;">
+<img class="figure" src="2.png" alt="figure 2.png" style="max-width: 947px; max-height: 492px;"/>
+<div class="caption">
+Figure 11 
+</div>
+
+</div>
+
+</div>
+<br/>
+<br/>
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2017-06-13"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Documentation projet plateforme accélérométrique et gyroscopique </title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Documentation projet plateforme accélérométrique et gyroscopique <br/>
+<b>Installer Qt</b>
+</h1>
+<h2 class="author">
+Antonin HÉRÉSON &amp; Marly BALDE
+</h2>
+<h2 class="Date">
+Juin 2017
+</h2>
+<div class="abstract">
+<p class="abstract-message">
+Abstract
+</p>
+Ce document a pour but de vous guider dans l’installation de Qt.
+</div>
+<div class="abstract">
+Qt est installable sous trois plateformes:
+</div>
+<div class="abstract">
+<span class="formula">▶<span class="phantom"></span></span>Windows
+</div>
+<div class="abstract">
+<span class="formula">▶<span class="phantom"></span></span>Macintosh
+</div>
+<div class="abstract">
+<span class="formula">▶<span class="phantom"></span></span>Linux
+</div>
+<div class="abstract">
+Nous allons voir comment installer suivant l’Os choisi
+</div>
+<div class="Unindented">
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+<div class="fulltoc">
+<div class="tocheader">
+Table of Contents
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Section-1">Section 1: Pré-installation</a>
+</div>
+<div class="tocindent">
+<div class="toc">
+<a class="Link" href="#toc-Subsection-1.1">Subsection 1.1: Linux (à l’aide du terminal)</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-1.2">Subsection 1.2: Macintosh</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Subsection-1.3">Subsection 1.3: Windows</a>
+</div>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-2">Section 2: Télécharger le logiciel</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Section-3">Section 3: Installation</a>
+</div>
+</div>
+
+</div>
+<h1 class="Section">
+<a class="toc" name="toc-Section-1">1</a> Pré-installation
+</h1>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-1.1">1.1</a> Linux (à l’aide du terminal)
+</h2>
+<div class="Unindented">
+Pour installer les compilateurs 
+</div>
+<ul>
+<li>
+<div class="Boxed" style="width: 100%;">
+sudo apt-get install g++ gcc
+</div>
+
+</li>
+
+</ul>
+<div class="Unindented">
+Pour installer git (optionnel)
+</div>
+<ul>
+<li>
+<div class="Boxed" style="width: 100%;">
+sudo apt-get install git gitk
+</div>
+
+</li>
+
+</ul>
+<div class="Unindented">
+Pour une installation plus propre, on vous propose d’installer dans &ldquo;opt&rdquo; qui est le dossier réservé aux installations externes. Pour cela nous allons créer un dossier dans &ldquo;opt&rdquo;, et donner les droits à l’utilisateur final.
+</div>
+<ul>
+<li>
+<div class="Boxed" style="width: 100%;">
+sudo mkdir /opt/Qt
+</div>
+
+</li>
+<li>
+<div class="Boxed" style="width: 100%;">
+sudo chown &lt;yourID&gt; /opt/Qt/
+</div>
+
+</li>
+
+</ul>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-1.2">1.2</a> Macintosh
+</h2>
+<div class="Unindented">
+Il faut installer Xcode, disponible dans l’appstore de mac, puis le lancer une fois. ( Il n’est pas nécessaire de l’ouvrir à chaque utilisation, une première fois lors de l’installation suffit)
+</div>
+<h2 class="Subsection">
+<a class="toc" name="toc-Subsection-1.3">1.3</a> Windows
+</h2>
+<div class="Unindented">
+Aucune pré-installation n’est nécessaire
+</div>
+<h1 class="Section">
+<a class="toc" name="toc-Section-2">2</a> Télécharger le logiciel
+</h1>
+<div class="Unindented">
+Rendez vous sur le site de qt : www.qt.io et téléchargez Qt creator
+</div>
+<ol>
+<li>
+Rendez vous sur Qt et cliquez sur download Qt
+</li>
+<li>
+Choisissez la version desktop 
+</li>
+<li>
+Choisissez la version open source
+</li>
+<li>
+Et vous pouvez télécharger le Qtcreator correspondant à votre Os
+</li>
+
+</ol>
+<div class="Labeling">
+1.<img class="embedded" src="qtsite1.png" alt="figure qtsite1.png" style="width: 204px; max-width: 1366px; height: 115px; max-height: 768px;"/>
+2. <img class="embedded" src="qtsite2.png" alt="figure qtsite2.png" style="width: 204px; max-width: 1366px; height: 115px; max-height: 768px;"/>
+
+</div>
+<div class="Unindented">
+3.<img class="embedded" src="qtsite3.png" alt="figure qtsite3.png" style="width: 204px; max-width: 1366px; height: 115px; max-height: 768px;"/>
+4. <img class="embedded" src="qtsite4.png" alt="figure qtsite4.png" style="width: 204px; max-width: 1366px; height: 115px; max-height: 768px;"/>
+
+</div>
+<div class="Indented">
+<div class="defskip"> </div>Pour rendre le fichier exécutable sous Linux
+</div>
+<ul>
+<li>
+<div class="Boxed" style="width: 100%;">
+chmod +x qt-unified-linux-XXX
+</div>
+
+</li>
+
+</ul>
+<h1 class="Section">
+<a class="toc" name="toc-Section-3">3</a> Installation
+</h1>
+<div class="Unindented">
+Nous allons maintenant voir pas à pas l’installation de Qt. Pour lancer l’installeur cliquez dessus.<br/>
+
+</div>
+<div class="Description">
+<span class="Description-entry"><img class="embedded" src="install1.png" alt="figure install1.png" style="width: 202px; max-width: 506px; height: 220px; max-height: 552px;"/>
+<img class="embedded" src="install2.png" alt="figure install2.png" style="width: 202px; max-width: 506px; height: 220px; max-height: 552px;"/>
+</span> 
+</div>
+<div class="Description">
+<span class="Description-entry"><img class="embedded" src="install3.png" alt="figure install3.png" style="width: 202px; max-width: 506px; height: 220px; max-height: 552px;"/>
+<img class="embedded" src="install3bis.png" alt="figure install3bis.png" style="width: 202px; max-width: 506px; height: 220px; max-height: 552px;"/>
+</span> 
+</div>
+<div class="Unindented">
+Note configuration d’un proxy peux être nécessaire.<br/>
+
+</div>
+<div class="Indented">
+Vous allez maintenant choisir le répertoire de votre choix
+</div>
+<div class="Indented">
+Pour Linux nous vous conseillons /opt/Qt et pour Windows le répertoire ou sont stockés les programmes<br/>
+
+</div>
+<div class="Description">
+<span class="Description-entry"><img class="embedded" src="install5.png" alt="figure install5.png" style="width: auto; max-width: 506px; height: 7.8cm; max-height: 552px;"/>
+<img class="embedded" src="install6.png" alt="figure install6.png" style="width: auto; max-width: 506px; height: 7.8cm; max-height: 552px;"/>
+</span> 
+</div>
+<div class="Description">
+<span class="Description-entry"><img class="embedded" src="collé1.png" alt="figure collé1.png" style="max-width: 533px; max-height: 50px;"/>
+</span> 
+</div>
+<div class="Unindented">
+Il faut maintenant choisir les composants à installer.<br/>
+L’installation par défaut convient. Nous avons utilisé la version 4.9 de Qt. <br/>
+Nous utilisation pas de modules complémentaires proposés.<br/>
+
+</div>
+<div class="Description">
+<span class="Description-entry"><img class="embedded" src="install7.png" alt="figure install7.png" style="width: 205px; max-width: 514px; height: 242px; max-height: 606px;"/>
+<img class="embedded" src="install8.png" alt="figure install8.png" style="width: 206px; max-width: 515px; height: 242px; max-height: 606px;"/>
+</span> 
+</div>
+<div class="Description">
+<span class="Description-entry">Linux/Windows</span> Vous pouvez maintenant démarrer l’environnement de développement
+</div>
+<div class="Description">
+<span class="Description-entry">Macintosh</span> Vous devez faire glisser l’exécutable dans le dossier application
+</div>
+<div class="Unindented">
+L’installation est finie. S’il vous manque un composant ou pour une mise à jour vous pouvez utiliser le Maintenance Tools installé avec Qtcreator<br/>
+<br/>
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+
+</div>
+</body>
+</html>

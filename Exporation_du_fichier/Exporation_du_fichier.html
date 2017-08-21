@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2017-06-13"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>Documentation projet plateforme accélérométrique et gyroscopique </title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+Documentation projet plateforme accélérométrique et gyroscopique <br/>
+<b>L’exportation de notre programme avec Qt (annexe)</b>
+</h1>
+<h2 class="author">
+Antonin HÉRÉSON &amp; Marly BALDE
+</h2>
+<h2 class="Date">
+Juin 2017
+</h2>
+<div class="abstract">
+<p class="abstract-message">
+Abstract
+</p>
+Nous avons voulu exporter de notre programme ( en tant que fichier binaire) sur une autre machine ne disposant pas du logiciel Qt. <br/>
+Bien que très compliquée, nous avons choisi d’intégrer cette partie dans notre programme car elle pourra vous faire gagner un temps précieux si vous souhaitez déployer le logiciel sur d’autre ordinateur.<br/>
+
+</div>
+<div class="Unindented">
+<a class="URL" href="../index.html">Retour au sommaire principal</a><br/>
+<div class="fulltoc">
+<div class="tocheader">
+Table of Contents
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part--I">Part: L’explication</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part--II">Part: La procédure / le principe</a>
+</div>
+<div class="toc">
+<a class="Link" href="#toc-Part--III">Part: Les utilitaires</a>
+</div>
+
+</div>
+
+</div>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--I"></a>L’explication
+</h1>
+<div class="Unindented">
+Lors de la compilation, on obtient un fichier binaire avec notre partie du logiciel. Celle-ci a besoin de bibliothèques partagées qui ont été installées avec Qtcreator. <br/>
+Pour pouvoir s’en passer il faut trouver les différentes bibliothèques venant de Qtcreator et les livrer avec notre programme.
+</div>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--II"></a>La procédure / le principe
+</h1>
+<div class="Unindented">
+Nous avons effectué nos recherches pour Linux, mais le principe reste le même pour les autre OS.<br/>
+Il faut donc procéder en 3 étapes:
+</div>
+<ol>
+<li>
+Trouver quelle librairie partagée utilise notre programme<ol>
+<li>
+Sur Linux leur extension est &ldquo;.so &ldquo;. Pour les afficher on peut utiliser la commande <br/>
+<div class="Boxed" style="width: 100%;">
+ldd &lt;nom de votre programme&gt;
+</div>
+<br/>
+
+</li>
+<li>
+Sur Windows leur extension est &ldquo;.dll&rdquo;. Il y a des utilitaires qui permettent de trouver les dépendances.
+</li>
+
+</ol>
+
+</li>
+<li>
+Il faut ensuite les copier. 
+</li>
+<li>
+Pour Linux il faut modifier les chemins menant aux bibliothèques Qt. Pour cela on utilisera la commande patchelf Linux.<br/>
+Lib est le dossier dans lequel on a stocké les &ldquo;.so&rdquo; <br/>
+<div class="Boxed" style="width: 100%;">
+patchelf --set-rpath ./Lib DueAcc
+</div>
+<br/>
+<div class="Boxed" style="width: 100%;">
+patchelf --set-rpath ./ libicui18n.so.56 &lt;autre lib&gt;
+</div>
+<br/>
+Maintenant si on utilise la commande ldd, on peut observer la bonne redirection des bibliothèques.<br/>
+Voir la directive &ldquo;origine&rdquo; à la place de ./ ’$ORIGIN’
+</li>
+<li>
+Le fichier peut maintenant être exécuté sur un autre système d’exploitation. (Nous n’avons pas eu le temps de tester sur un autre ordinateur que le notre)
+</li>
+
+</ol>
+<h1 class="Part-">
+<a class="toc" name="toc-Part--III"></a>Les utilitaires
+</h1>
+<div class="Unindented">
+On peux trouver des utilitaires permettant d’effectuer ces opérations mais on estimait qu’il était important de comprendre le fonctionnement du processus.<br/>
+<br/>
+<a class="URL" href="../index.html">Retour au sommaire principal</a>
+</div>
+
+</div>
+</body>
+</html>
