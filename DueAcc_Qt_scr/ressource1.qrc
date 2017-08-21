@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/LogoEnsea">
+        <file>Image/Logo_ENSEA.png</file>
+        <file>Image/Button_Open-01.png</file>
+    </qresource>
+</RCC>
